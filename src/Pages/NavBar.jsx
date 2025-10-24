@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { useAuthStore } from "@/Stores/authStore.js";
+import { useLocationStore } from "@/Stores/locationStore.js";
+import { FaMapMarkerAlt } from "react-icons/fa";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -9,6 +11,13 @@ const NavBar = () => {
   const role = useAuthStore((s) => s.role);
   const doSignOut = useAuthStore((s) => s.signOut);
   const navigate = useNavigate();
+  const place = useLocationStore((s) => s.place);
+  const initLocation = useLocationStore((s) => s.initFromStorage);
+  const requestLocation = useLocationStore((s) => s.requestLocation);
+
+  useEffect(() => {
+    initLocation();
+  }, [initLocation]);
 
   const handleLogout = async () => {
     try {
@@ -59,6 +68,17 @@ const NavBar = () => {
 
         {/* Right Side - Cart / Auth Buttons */}
         <div className="hidden md:flex items-center gap-4">
+          {/* Location indicator */}
+          <button
+            onClick={requestLocation}
+            title={place ? `Current location: ${place}` : "Set location"}
+            className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
+          >
+            <FaMapMarkerAlt className="text-blue-600" />
+            <span className="truncate max-w-[200px]" aria-live="polite">
+              {place || "Set location"}
+            </span>
+          </button>
           <NavLink
             to="/cart"
             className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
@@ -124,7 +144,14 @@ const NavBar = () => {
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
         <div className="md:hidden fixed top-16 left-0 w-full h-[calc(100vh-4rem)] bg-white z-40 flex flex-col items-center justify-center gap-8">
-          <ul className="flex flex-col gap-8 text-xl text-gray-800 text-center">
+          <ul className="flex flex-col gap-6 text-xl text-gray-800 text-center">
+            <button
+              onClick={() => { requestLocation(); setIsMenuOpen(false); }}
+              className="mx-auto flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
+            >
+              <FaMapMarkerAlt className="text-blue-600" />
+              <span>{place || "Set location"}</span>
+            </button>
             <Link to="/#services">
               <li className="font-semibold cursor-pointer">Services</li>
             </Link>
