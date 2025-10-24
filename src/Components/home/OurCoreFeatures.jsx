@@ -25,7 +25,7 @@ const coreFeatures = [
     title: "THERAPY",
     description: "Access various therapy sessions for mental and physical well-being.",
     image: "/Images/therapy.jpg",
-    link: "/therapy"
+    link: "/about"
   },
 ];
 

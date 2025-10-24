@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { auth } from "@/firebase.js";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import { useAuthStore } from "@/Stores/authStore.js";
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const user = useAuthStore((s) => s.user);
+  const role = useAuthStore((s) => s.role);
+  const doSignOut = useAuthStore((s) => s.signOut);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      await doSignOut();
       navigate("/login");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -29,7 +23,7 @@ const NavBar = () => {
     <>
       <div className="w-full h-16 fixed flex justify-between items-center top-0 left-0 z-50 bg-white/90 backdrop-blur-sm shadow-md px-8 sm:px-16 lg:px-24">
         {/* Left Logo */}
-        <div className="flex-shrink-0 flex items-center">
+        <div className="shrink-0 flex items-center">
           <NavLink to="/">
             <img
               className="w-40 sm:w-48 md:w-56 object-contain"
@@ -96,6 +90,14 @@ const NavBar = () => {
               </NavLink>
             </>
           )}
+          {user && (
+            <NavLink
+              to={role === 'patient' ? '/patient-dashboard' : '/provider-dashboard'}
+              className="ml-2 bg-green-600 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-colors"
+            >
+              Dashboard
+            </NavLink>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -160,6 +162,14 @@ const NavBar = () => {
                   Sign Up
                 </Link>
               </>
+            )}
+            {user && (
+              <Link
+                to={role === 'patient' ? '/patient-dashboard' : '/provider-dashboard'}
+                className="bg-green-600 text-white font-semibold px-4 py-2 rounded-md text-center"
+              >
+                Dashboard
+              </Link>
             )}
           </div>
         </div>

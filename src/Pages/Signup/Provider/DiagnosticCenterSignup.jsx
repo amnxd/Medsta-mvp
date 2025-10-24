@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth, db } from '/src/firebase.js';
+import { auth, db } from '@/Services/firebase.js';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import AddressPicker from '/src/Components/common/AddressPicker.jsx';
 import ToggleSwitch from '/src/Components/common/ToggleSwitch.jsx';
 import OtpModal from '/src/Components/common/OtpModal.jsx';
-import { startPhoneLinking } from '/src/utils/phoneAuth.js';
+import { startPhoneLinking } from '@/Services/phone.service.js';
 
 const DiagnosticCenterSignup = () => {
   const [formData, setFormData] = useState({
@@ -239,10 +239,22 @@ const DiagnosticCenterSignup = () => {
               />
             </div>
 
-            {!isValid() && submitAttempted && (
-              <p className="text-xs text-red-600">Please fill all required fields and ensure passwords match.</p>
+            {(error || (!isValid() && submitAttempted)) && (
+              <p className="text-sm text-red-600 mt-2">{error || 'Please fill all required fields and ensure passwords match.'}</p>
             )}
-            <button type="submit" disabled={!isValid()} className={`w-full text-white px-4 py-2 rounded-md ${isValid() ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-300 cursor-not-allowed'}`}>Sign Up</button>
+            <button
+              type="submit"
+              disabled={isLoading || !isValid()}
+              className={`w-full text-white px-4 py-2 rounded-md ${
+                isLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : isValid()
+                  ? 'bg-green-600 hover:bg-green-700'
+                  : 'bg-slate-300 cursor-not-allowed'
+              }`}
+            >
+              {isLoading ? 'Creating Account...' : 'Sign Up'}
+            </button>
           </form>
 
           <p className="text-slate-600 mt-4 text-center">Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link></p>

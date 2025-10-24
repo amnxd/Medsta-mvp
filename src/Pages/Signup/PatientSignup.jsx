@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, db } from "/src/firebase.js";
+import { auth, db } from "@/Services/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { startPhoneLinking } from "/src/utils/phoneAuth.js";
+import { startPhoneLinking } from "@/Services/phone.service.js";
 import OtpModal from "/src/Components/common/OtpModal.jsx";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
@@ -350,9 +350,5 @@ const PatientSignup = () => {
 };
 
 export default PatientSignup;
-// OTP Modal mounted at page root so it can overlay content
-// Place component after export default to keep render tree lean; JSX below returns null when closed
-/* eslint-disable */
-function OtpOverlay() { return null }
 
 

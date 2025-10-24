@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, db } from "/src/firebase.js";
+import { auth, db } from "@/Services/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import AddressPicker from "/src/Components/common/AddressPicker.jsx";
 import OtpModal from "/src/Components/common/OtpModal.jsx";
-import { startPhoneLinking } from "/src/utils/phoneAuth.js";
+import { startPhoneLinking } from "@/Services/phone.service.js";
 
 const PharmacySignup = () => {
   const [formData, setFormData] = useState({

@@ -1,9 +1,8 @@
-import React from 'react'
+import React from 'react';
 
+// Deprecated/unused page. Use DiagnosticTests.jsx and the /diagnostic-tests route.
 const DiagnosticTest = () => {
-  return (
-    <div>DiagnosticTest</div>
-  )
-}
+  return null;
+};
 
-export default DiagnosticTest
+export default DiagnosticTest;

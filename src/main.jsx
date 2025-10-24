@@ -15,10 +15,12 @@ import Policies from './Pages/Policies.jsx'
 import MultivendorWorkplace from './Pages/MultivendorWorkplace.jsx'
 import PatientDashboard from './Pages/PatientDashboard.jsx';
 import ProviderDashboard from './Pages/ProviderDashboard.jsx';
+import ProtectedRoute from '@/Components/router/ProtectedRoute.jsx';
+import Cart from './Pages/Cart.jsx'
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import PatientSignup from './Pages/PatientSignup.jsx'
-import ProviderSignup from './Pages/Signup/ProviderSignup.jsx'
+import ProviderHub from './Pages/Signup/Provider/ProviderHub.jsx'
 import DoctorSignup from './Pages/Signup/Provider/DoctorSignup.jsx'
 import DiagnosticCenterSignup from './Pages/Signup/Provider/DiagnosticCenterSignup.jsx'
 import PharmacySignup from './Pages/Signup/Provider/PharmacySignup.jsx'
@@ -40,13 +42,23 @@ const router = createBrowserRouter([
   { path: '/login/provider', element: <ProviderLogin /> },
   { path: '/signup', element: <SignUp /> },
   { path: '/signup/patient', element: <PatientSignup /> },
-  { path: '/signup/provider', element: <ProviderSignup /> },
+  { path: '/signup/provider', element: <ProviderHub /> },
+  { path: '/book-appointment', element: <BookAppointment /> },
+  { path: '/cart', element: <Cart /> },
   { path: '/signup/provider/doctor', element: <DoctorSignup /> },
   { path: '/signup/provider/diagnostic-center', element: <DiagnosticCenterSignup /> },
   { path: '/signup/provider/pharmacy', element: <PharmacySignup /> },
   { path: '/signup/provider/delivery-agent', element: <DeliveryAgentSignup /> },
-  { path: '/patient-dashboard', element: <PatientDashboard /> },
-  { path: '/provider-dashboard', element: <ProviderDashboard /> }
+  { path: '/patient-dashboard', element: (
+    <ProtectedRoute allowRoles={['patient']}>
+      <PatientDashboard />
+    </ProtectedRoute>
+  ) },
+  { path: '/provider-dashboard', element: (
+    <ProtectedRoute allowRoles={['provider']}>
+      <ProviderDashboard />
+    </ProtectedRoute>
+  ) }
     ]
   }
 ])

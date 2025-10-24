@@ -3,4 +3,5 @@
 /* Global background for the entire site (match GetInTouch pale background) */
 body {
 	background-color: #F0F8FF; /* requested HSL(210,20%,95%) */
+  font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
