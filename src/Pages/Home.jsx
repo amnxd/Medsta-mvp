@@ -25,8 +25,8 @@ const Home = () => {
     <div className="w-full pt-10"> {/* Add padding top to avoid navbar overlap */}
       
       {/* Welcome Section */}
-      <section className="text-center py-6 md:py-6 px-4 bg-white">
-        <h1 className="text-7xl md:text-7xl font-bold text-blue-600">Welcome to Medsta</h1>
+      <section className="text-center py-6 md:py-6 px-4">
+        <h1 className="text-7xl md:text-7xl font-medium text-[#009cfb]">Welcome to Medsta</h1>
         <p className="mt-2 text-slate-600">Healthcare, Your Way. Comprehensive digital healthcare for everyone, everywhere.</p>
         
         {/* Search Bar */}
@@ -67,7 +67,7 @@ const Home = () => {
 
       {/* Our Partners Near You Section */}
       <section className="max-w-5xl mx-auto px-4 sm:px-10 py-6">
-        <h2 className="text-5xl font-semibold text-center text-blue-600 mb-8">Our Partners Near You</h2>
+        <h2 className="text-5xl font-medium text-center text-[#009cfb] mb-8">Our Partners Near You</h2>
         <div className="flex items-center justify-center gap-6 md:gap-8 flex-wrap">
           {partners.map((partner, index) => (
             <div key={index} className="text-center">

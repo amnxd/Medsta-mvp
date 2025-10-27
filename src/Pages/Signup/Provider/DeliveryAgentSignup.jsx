@@ -12,6 +12,8 @@ const DeliveryAgentSignup = () => {
     confirmPassword: '',
   });
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Added isLoading state
+  const [error, setError] = useState(null); // Added error state
   const navigate = useNavigate();
 
   const isValid = () => {
@@ -26,8 +28,10 @@ const DeliveryAgentSignup = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setSubmitAttempted(true);
+    setError(null); // Clear previous errors
     if (!isValid()) return;
 
+    setIsLoading(true); // Set loading true
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
@@ -46,11 +50,14 @@ const DeliveryAgentSignup = () => {
         deliveryFullName: formData.deliveryFullName,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
+        // Add other relevant fields like vehicle details, license, availability, GeoPoint later
       });
+      setIsLoading(false); // Set loading false on success
       navigate('/login');
     } catch (error) {
       console.error('Error signing up:', error);
-      alert(`Sign up failed: ${error.message}`);
+      setError(error.message || `Sign up failed`); // Set error state
+      setIsLoading(false); // Set loading false on error
     }
   };
 
@@ -58,8 +65,10 @@ const DeliveryAgentSignup = () => {
     <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
       <div className="max-w-md w-full px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Create a Delivery Agent Account</h1>
-          <p className="text-sm text-slate-500 mb-6">Deliver health services and medicines with HealTech.</p>
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1"> {/* UPDATED COLOR HERE */}
+            Create a Delivery Agent Account
+          </h1>
+          <p className="text-sm text-slate-500 mb-6">Deliver health services and medicines with Medsta.</p> {/* UPDATED: HealTech to Medsta */}
 
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
@@ -114,10 +123,41 @@ const DeliveryAgentSignup = () => {
               />
             </div>
 
-            {!isValid() && submitAttempted && (
-              <p className="text-xs text-red-600">Please fill all required fields and ensure passwords match.</p>
+            {/* Display error message */}
+            {(error || (!isValid() && submitAttempted)) && (
+              <p className="text-sm text-red-600 mt-2">
+                {error || 'Please fill all required fields and ensure passwords match.'}
+              </p>
             )}
-            <button type="submit" disabled={!isValid()} className={`w-full text-white px-4 py-2 rounded-md ${isValid() ? 'bg-green-600 hover:bg-green-700' : 'bg-slate-300 cursor-not-allowed'}`}>Sign Up</button>
+
+            <button
+              type="submit"
+              disabled={isLoading || (!isValid() && submitAttempted)}
+              className={`w-full ${
+                isLoading
+                 ? 'bg-gray-400 cursor-not-allowed'
+                  : !isValid() && submitAttempted
+                  ? 'bg-slate-300 cursor-not-allowed'
+                  : 'bg-green-600 hover:bg-green-700'
+              } text-white px-4 py-2 rounded-md flex items-center justify-center`}
+            >
+              {isLoading ? (
+                <>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Creating Account...
+                </>
+              ) : (
+                'Sign Up'
+              )}
+            </button>
           </form>
 
           <p className="text-slate-600 mt-4 text-center">Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Log in</Link></p>

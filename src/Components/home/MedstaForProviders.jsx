@@ -5,12 +5,12 @@ import React from 'react';
 const MedstaForProviders = () => {
   return (
     // UPDATED: Removed background color for a simpler look
-    <section className="py-8 bg-white text-slate-800">
+    <section className="py-8 text-slate-800">
       <div className="max-w-7xl mx-auto px-4">
         
         {/* Header with font and color matching 'Get in Touch' */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-500 mb-4">
+          <h2 className="text-4xl md:text-5xl font-medium text-[#009cfb] mb-4">
             Medsta for Providers
           </h2>
           <p className="text-lg text-gray-700">

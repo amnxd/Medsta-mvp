@@ -114,11 +114,11 @@ export default function OurCoreFeatures() {
     const groupedHeroes = chunkArray(medstaHeroes, 2); // Always group heroes by 2
 
   return (
-    <section id="services" className="py-16 md:py-8 bg-slate-50 text-slate-800">
+    <section id="services" className="py-16 md:py-8 text-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header for Core Features */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-600 mb-3">Our Core Features</h2>
+          <h2 className="text-4xl md:text-5xl font-medium text-[#009cfb] mb-3">Our Core Features</h2>
           <p className="text-slate-600 text-lg">
             Explore the powerful tools Medsta offers to manage your health seamlessly
           </p>
@@ -142,7 +142,7 @@ export default function OurCoreFeatures() {
 
         {/* Shop by your common needs Section */}
         <div className="text-center mb-8">
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-600 mb-3">Shop by your common needs</h2>
+          <h2 className="text-4xl md:text-5xl font-medium text-[#009cfb] mb-3">Shop by your common needs</h2>
           <p className="text-slate-600 text-lg">
             Book Tests, Medicine, Appointment, Therapy at the comfort of your home or get priority at the store
           </p>
@@ -195,7 +195,7 @@ export default function OurCoreFeatures() {
 
         {/* Most Sold Products Section */}
         <div className="text-center mb-8">
-          <h2 className="py-16 md:py-12 text-4xl md:text-5xl font-semibold text-blue-600 mb-3">Most sold products</h2>
+          <h2 className="py-16 md:py-12 text-4xl md:text-5xl font-medium text-[#009cfb] mb-3">Most sold products</h2>
         </div>
 
         {/* Most Sold Products Carousel */}
@@ -230,7 +230,7 @@ export default function OurCoreFeatures() {
 
         {/* Offers Section */}
         <div className="text-center mb-8 mt-16">
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-600 mb-3">Offers</h2>
+          <h2 className="text-4xl md:text-5xl font-medium text-[#009cfb] mb-3">Offers</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <div className="h-32 rounded-lg bg-gradient-to-r from-blue-300 to-indigo-200 shadow-md flex items-center justify-center text-white text-xl font-bold">
@@ -246,7 +246,7 @@ export default function OurCoreFeatures() {
 
         {/* Meet our Heroes Section */}
         <div className="text-center mb-8 mt-16">
-          <h2 className="text-4xl md:text-5xl font-semibold text-blue-600 mb-3">Meet our Heroes</h2>
+          <h2 className="text-4xl md:text-5xl font-medium text-[#009cfb] mb-3">Meet our Heroes</h2>
         </div>
         <div className="relative mb-16">
           <Carousel

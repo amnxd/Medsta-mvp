@@ -6,7 +6,7 @@ export default function Policies() {
       <div className="max-w-5xl mx-auto">
         {/* Page Header */}
         <header className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-900">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-[#009cfb]">
             🏥 Medsta Legal Policies
           </h1>
           <p className="text-slate-500">

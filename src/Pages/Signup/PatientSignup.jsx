@@ -132,13 +132,13 @@ const PatientSignup = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
-      <div className="max-w-md w-full px-6">
+      <div className="max-w-2xl w-full px-6"> {/* UPDATED: max-w-md to max-w-2xl */}
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1"> {/* UPDATED: text-slate-900 to text-[#009cfb] */}
             Create a Patient Account
           </h1>
           <p className="text-sm text-slate-500 mb-6">
-            Sign up to manage your health with HealTech.
+            Sign up to manage your health with Medsta. {/* UPDATED: HealTech to Medsta */}
           </p>
 
           <form onSubmit={handleSignUp} className="space-y-4">
@@ -350,5 +350,3 @@ const PatientSignup = () => {
 };
 
 export default PatientSignup;
-
-

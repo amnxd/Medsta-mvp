@@ -2,11 +2,11 @@ import React from 'react';
 
 export default function About() {
   return (
-    <div className="py-20 px-4 bg-white text-slate-800">
+    <div className="py-20 px-4 text-slate-800">
       <div className="max-w-5xl mx-auto">
         {/* Page Header */}
         <header className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-slate-900">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-[#009cfb]">
             Ab Aapka Apna Medical, Doctor aur Diagnostic Center – Medsta Pe!
           </h1>
           <p className="text-lg text-slate-600">

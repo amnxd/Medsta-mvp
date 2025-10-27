@@ -140,14 +140,16 @@ const PharmacySignup = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
-      <div className="max-w-md w-full px-6">
+    // ADDED pt-20, REMOVED bg-slate-50
+    <main className="min-h-screen flex items-center justify-center py-12 pt-20">
+       {/* UPDATED max-w-md to max-w-2xl */}
+      <div className="max-w-2xl w-full px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1">
             Create a Pharmacy Account
           </h1>
           <p className="text-sm text-slate-500 mb-6">
-            Sell medicines and manage orders with HealTech.
+            Sell medicines and manage orders with Medsta.
           </p>
 
           <form onSubmit={handleSignUp} className="space-y-4">

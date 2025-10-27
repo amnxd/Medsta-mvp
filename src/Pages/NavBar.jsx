@@ -30,98 +30,105 @@ const NavBar = () => {
 
   return (
     <>
-      <div className="w-full h-16 fixed flex justify-between items-center top-0 left-0 z-50 bg-white/90 backdrop-blur-sm shadow-md px-8 sm:px-16 lg:px-24">
-        {/* Left Logo */}
-        <div className="shrink-0 flex items-center">
-          <NavLink to="/">
-            <img
-              className="w-40 sm:w-48 md:w-56 object-contain"
-              src="../Images/logo.png"
-              alt="Logo"
-            />
-          </NavLink>
-        </div>
+      {/* Outer fixed container */}
+      <div className="w-full h-16 fixed flex justify-center items-center top-0 left-0 z-50 bg-white/90 backdrop-blur-sm shadow-md px-4 sm:px-6 lg:px-8">
+        {/* Inner container for max-width and centering */}
+        <div className="w-full max-w-7xl flex justify-between items-center">
 
-        {/* Center Menu */}
-        <div className="hidden md:flex flex-1 justify-center">
-          <ul className="flex gap-10 text-md text-gray-800">
-            <Link to="/#services">
-              <li className="font-medium cursor-pointer hover:text-blue-600 transition-colors">
-                Services
-              </li>
-            </Link>
-            <NavLink to="/about">
-              <li className="font-medium cursor-pointer hover:text-blue-600 transition-colors">
-                About
-              </li>
+          {/* Left Logo */}
+          <div className="shrink-0 flex items-center">
+            <NavLink to="/">
+              <img
+                // Adjusted height slightly, kept width settings for responsiveness
+                className="h-15 w-40 sm:w-48 md:w-56 object-contain"
+                src="../Images/logo.png"
+                alt="Logo"
+              />
             </NavLink>
-            <NavLink to="/policies">
+          </div>
+
+          {/* Center Menu: flex-1 ensures it pushes logo left and buttons right WITHIN the inner container */}
+          <div className="hidden md:flex flex-1 justify-center">
+            <ul className="flex gap-10 text-md text-gray-800">
+              <Link to="/#services">
+                <li className="font-medium cursor-pointer hover:text-blue-600 transition-colors">
+                  Services
+                </li>
+              </Link>
+              <NavLink to="/about">
+                <li className="font-medium cursor-pointer text-[#009cfb] hover:text-blue-600 transition-colors">
+                  About
+                </li>
+              </NavLink>
+              <NavLink to="/policies">
+                <li className="font-medium cursor-pointer text-[#009cfb] hover:text-blue-600 transition-colors">
+                  Policies
+                </li>
+              </NavLink>
               <li className="font-medium cursor-pointer hover:text-blue-600 transition-colors">
-                Policies
+                Contact
               </li>
-            </NavLink>
-            <li className="font-medium cursor-pointer hover:text-blue-600 transition-colors">
-              Contact
-            </li>
-          </ul>
-        </div>
+            </ul>
+          </div>
 
-        {/* Right Side - Cart / Auth Buttons */}
-        <div className="hidden md:flex items-center gap-4">
-          {/* Location indicator */}
-          <button
-            onClick={requestLocation}
-            title={place ? `Current location: ${place}` : "Set location"}
-            className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
-          >
-            <FaMapMarkerAlt className="text-blue-600" />
-            <span className="truncate max-w-[200px]" aria-live="polite">
-              {place || "Set location"}
-            </span>
-          </button>
-          <NavLink
-            to="/cart"
-            className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
-          >
-            <FaShoppingCart />
-            <span>Cart</span>
-          </NavLink>
-
-          {user ? (
+          {/* Right Side - Cart / Auth Buttons */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Location indicator */}
             <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-red-600 transition-colors"
+              onClick={requestLocation}
+              title={place ? `Current location: ${place}` : "Set location"}
+              className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
             >
-              Logout
+              <FaMapMarkerAlt className="text-blue-600" />
+              <span className="truncate max-w-[200px]" aria-live="polite">
+                {place || "Set location"}
+              </span>
             </button>
-          ) : (
-            <>
-              <NavLink
-                to="/login"
-                className="bg-transparent text-blue-600 font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-blue-50 transition-colors"
-              >
-                Login
-              </NavLink>
-              <NavLink
-                to="/signup"
-                className="bg-blue-600 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-blue-700 transition-colors"
-              >
-                Sign Up
-              </NavLink>
-            </>
-          )}
-          {user && (
             <NavLink
-              to={role === 'patient' ? '/patient-dashboard' : '/provider-dashboard'}
-              className="ml-2 bg-green-600 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-colors"
+              to="/cart"
+              className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
             >
-              Dashboard
+              <FaShoppingCart />
+              <span>Cart</span>
             </NavLink>
-          )}
-        </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <NavLink
+                  to="/login"
+                  className="bg-transparent text-[#009cfb] font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-blue-50 transition-colors"
+                >
+                  Login
+                </NavLink>
+                <NavLink
+                  to="/signup"
+                  className="bg-blue-600 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Sign Up
+                </NavLink>
+              </>
+            )}
+            {user && (
+              <NavLink
+                to={role === 'patient' ? '/patient-dashboard' : '/provider-dashboard'}
+                className="ml-2 bg-green-600 text-white font-semibold px-4 py-2 cursor-pointer rounded-md hover:bg-green-700 transition-colors"
+              >
+                Dashboard
+              </NavLink>
+            )}
+          </div>
+
+        </div> {/* End Inner container */}
+
+        {/* Mobile Menu Button - Stays outside inner container for edge placement */}
+        <div className="md:hidden flex items-center absolute right-4 sm:right-6 lg:right-8"> {/* Positioned absolutely */}
           <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
             <svg
               className="w-6 h-6"
@@ -139,7 +146,7 @@ const NavBar = () => {
             </svg>
           </button>
         </div>
-      </div>
+      </div> {/* End Outer fixed container */}
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
@@ -155,21 +162,26 @@ const NavBar = () => {
             <Link to="/#services">
               <li className="font-semibold cursor-pointer">Services</li>
             </Link>
-            <li className="font-semibold cursor-pointer">About</li>
-            <li className="font-semibold cursor-pointer">Policies</li>
+             <NavLink to="/about" onClick={() => setIsMenuOpen(false)}> {/* Close menu on navigate */}
+              <li className="font-semibold cursor-pointer">About</li>
+             </NavLink>
+             <NavLink to="/policies" onClick={() => setIsMenuOpen(false)}> {/* Close menu on navigate */}
+              <li className="font-semibold cursor-pointer">Policies</li>
+             </NavLink>
             <li className="font-semibold cursor-pointer">Contact</li>
           </ul>
           <div className="flex flex-col gap-4 w-4/5">
             <NavLink
               to="/cart"
-              className="flex items-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
+              onClick={() => setIsMenuOpen(false)} /* Close menu */
+              className="flex items-center justify-center gap-2 text-gray-700 hover:bg-gray-200 px-3 py-2 rounded-md text-sm font-medium"
             >
               <FaShoppingCart />
               <span>Cart</span>
             </NavLink>
             {user ? (
               <button
-                onClick={handleLogout}
+                onClick={() => { handleLogout(); setIsMenuOpen(false); }} /* Close menu */
                 className="bg-red-500 text-white font-semibold px-4 py-2 rounded-md"
               >
                 Logout
@@ -178,12 +190,14 @@ const NavBar = () => {
               <>
                 <Link
                   to="/login"
+                  onClick={() => setIsMenuOpen(false)} /* Close menu */
                   className="bg-transparent text-blue-600 border border-blue-600 font-semibold px-4 py-2 rounded-md text-center"
                 >
                   Login
                 </Link>
                 <Link
                   to="/signup"
+                  onClick={() => setIsMenuOpen(false)} /* Close menu */
                   className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-md text-center"
                 >
                   Sign Up
@@ -193,6 +207,7 @@ const NavBar = () => {
             {user && (
               <Link
                 to={role === 'patient' ? '/patient-dashboard' : '/provider-dashboard'}
+                onClick={() => setIsMenuOpen(false)} /* Close menu */
                 className="bg-green-600 text-white font-semibold px-4 py-2 rounded-md text-center"
               >
                 Dashboard

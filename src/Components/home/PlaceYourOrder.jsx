@@ -3,10 +3,10 @@ import { FaWhatsapp, FaPhone } from 'react-icons/fa';
 
 const PlaceYourOrder = () => {
   return (
-    <section className="py-16 bg-slate-50 text-slate-800">
+    <section className="py-16 text-slate-800">
       <div className="max-w-4xl mx-auto px-4 text-center">
         
-        <h2 className="text-5xl font-semibold text-blue-600 mb-10">Place your order</h2>
+        <h2 className="text-5xl font-medium text-[#009cfb] mb-10">Place your order</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
           {/* Web/App Card */}

@@ -24,11 +24,11 @@ export default function GetInTouch() {
   };
 
   return (
-    <section className="py-6 bg-slate-50 text-slate-800">
+    <section className="py-6 text-slate-800">
       <div className="max-w-5xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-5xl font-semibold text-blue-500 mb-3">Get In Touch</h2>
+          <h2 className="text-5xl font-medium text-[#009cfb] mb-3">Get In Touch</h2>
           <p className="text-slate-600 text-lg">
             Have questions or want to partner with us? We'd love to hear from you.
           </p>

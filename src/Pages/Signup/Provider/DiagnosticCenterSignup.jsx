@@ -121,8 +121,10 @@ const DiagnosticCenterSignup = () => {
     <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
       <div className="max-w-md w-full px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Create a Diagnostic Center Account</h1>
-          <p className="text-sm text-slate-500 mb-6">Serve patients with lab services through HealTech.</p>
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1"> {/* UPDATED COLOR HERE */}
+            Create a Diagnostic Center Account
+          </h1>
+          <p className="text-sm text-slate-500 mb-6">Serve patients with lab services through Medsta.</p> {/* UPDATED: HealTech to Medsta */}
 
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
