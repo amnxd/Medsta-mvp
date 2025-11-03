@@ -39,10 +39,10 @@ const PatientLogin = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
+    <main className="min-h-screen flex items-center justify-center py-12">
       <div className="max-w-xl w-full px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Patient Login</h1>
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1">Patient Login</h1>
           <p className="text-sm text-slate-500 mb-6">Access your patient dashboard.</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
@@ -78,7 +78,7 @@ const PatientLogin = () => {
           <div className="mt-6 text-center text-slate-700">
             <p className="text-sm">
               Don’t have an account?{' '}
-              <Link to="/signup" className="text-blue-600 hover:underline">Sign up</Link>
+              <Link to="/signup" className="text-[#009cfb] hover:underline">Sign up</Link>
             </p>
             <p className="text-sm mt-2">
               Are you a provider?{' '}

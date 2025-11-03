@@ -23,18 +23,28 @@ const ProviderLogin = () => {
         if (data.role === 'provider') {
           navigate('/provider-dashboard');
         } else if (data.role === 'patient') {
-          navigate('/patient-dashboard');
+          // Redirect providers trying to log in as patients
+          alert('This login is for providers. Please use the patient login.');
+          setLoading(false); // Stop loading before redirecting or staying
+          // Optionally, redirect to patient login: navigate('/login');
+          return; // Prevent further execution
         } else {
-          navigate('/');
+          // Handle other roles or unexpected scenarios
+           alert('Login successful, but role undetermined. Redirecting home.');
+           navigate('/');
         }
       } else {
-        navigate('/');
+         alert('User data not found. Redirecting home.');
+         navigate('/'); // Or handle as an error
       }
     } catch (err) {
-      alert('Failed to log in. Please check your credentials.');
+      alert('Failed to log in. Please check your credentials or ensure you are using the correct login page.');
       console.error(err);
     } finally {
-      setLoading(false);
+      // setLoading(false); // Only set loading false if navigation didn't happen or on error
+       if (!navigate.pathname?.includes('dashboard')) { // Basic check if navigation occurred
+         setLoading(false);
+       }
     }
   };
 
@@ -42,7 +52,9 @@ const ProviderLogin = () => {
     <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
       <div className="max-w-xl w-full px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-1">Provider Login</h1>
+          <h1 className="text-3xl font-bold text-[#009cfb] mb-1"> {/* UPDATED COLOR HERE */}
+            Provider Login
+          </h1>
           <p className="text-sm text-slate-500 mb-6">Access your provider dashboard.</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
