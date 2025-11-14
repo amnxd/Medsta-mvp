@@ -37,7 +37,7 @@ const NavBar = () => {
 
           {/* Left Logo */}
           <div className="shrink-0 flex items-center">
-            <NavLink to="/">
+            <NavLink to={user ? (role === 'patient' ? '/patient-dashboard' : '/provider-dashboard') : '/'}>
               <img
                 // Adjusted height slightly, kept width settings for responsiveness
                 className="h-15 w-40 sm:w-48 md:w-56 object-contain"

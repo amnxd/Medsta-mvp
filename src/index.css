@@ -5,3 +5,10 @@ body {
 	background-color: #fdf6ee; /* requested HSL(210,20%,95%) */
   font-family: 'Poppins', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
+
+/* Consistent light gray placeholders across the app */
+input::placeholder,
+textarea::placeholder {
+	color: #9ca3af; /* Tailwind slate-400 */
+	opacity: 1; /* ensure consistent color across browsers */
+}

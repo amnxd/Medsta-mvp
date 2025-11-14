@@ -25,6 +25,11 @@ import DoctorSignup from './Pages/Signup/Provider/DoctorSignup.jsx'
 import DiagnosticCenterSignup from './Pages/Signup/Provider/DiagnosticCenterSignup.jsx'
 import PharmacySignup from './Pages/Signup/Provider/PharmacySignup.jsx'
 import DeliveryAgentSignup from './Pages/Signup/Provider/DeliveryAgentSignup.jsx'
+import TherapySignup from './Pages/Signup/Provider/TherapySignup.jsx'
+import OthersSignup from './Pages/Signup/Provider/OthersSignup.jsx'
+import SeedClinic from './Pages/Dev/SeedClinic.jsx'
+import SeedTherapy from './Pages/Dev/SeedTherapy.jsx'
+import SeedOthers from './Pages/Dev/SeedOthers.jsx'
 
 const router = createBrowserRouter([
   {
@@ -49,6 +54,8 @@ const router = createBrowserRouter([
   { path: '/signup/provider/diagnostic-center', element: <DiagnosticCenterSignup /> },
   { path: '/signup/provider/pharmacy', element: <PharmacySignup /> },
   { path: '/signup/provider/delivery-agent', element: <DeliveryAgentSignup /> },
+  { path: '/signup/provider/therapy', element: <TherapySignup /> },
+  { path: '/signup/provider/others', element: <OthersSignup /> },
   { path: '/patient-dashboard', element: (
     <ProtectedRoute allowRoles={['patient']}>
       <PatientDashboard />
@@ -57,6 +64,21 @@ const router = createBrowserRouter([
   { path: '/provider-dashboard', element: (
     <ProtectedRoute allowRoles={['provider']}>
       <ProviderDashboard />
+    </ProtectedRoute>
+  ) },
+  { path: '/dev/seed-clinic', element: (
+    <ProtectedRoute allowRoles={['provider']}>
+      <SeedClinic />
+    </ProtectedRoute>
+  ) }
+  ,{ path: '/dev/seed-therapy', element: (
+    <ProtectedRoute allowRoles={['provider']}>
+      <SeedTherapy />
+    </ProtectedRoute>
+  ) }
+  ,{ path: '/dev/seed-others', element: (
+    <ProtectedRoute allowRoles={['provider']}>
+      <SeedOthers />
     </ProtectedRoute>
   ) }
     ]

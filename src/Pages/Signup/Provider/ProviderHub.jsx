@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaUserMd, FaHospital, FaTruck, FaFlask } from 'react-icons/fa';
+import { FaUserMd, FaHospital, FaTruck, FaFlask, FaHandHoldingMedical, FaEllipsisH } from 'react-icons/fa';
 
 const providerTypes = [
-  { name: 'Doctor / Clinic', path: '/signup/provider/doctor', icon: <FaUserMd className="text-4xl mb-3" /> },
-  { name: 'Pharmacy / Store', path: '/signup/provider/pharmacy', icon: <FaHospital className="text-4xl mb-3" /> },
-  { name: 'Diagnostic Center', path: '/signup/provider/diagnostic', icon: <FaFlask className="text-4xl mb-3" /> },
-  { name: 'Delivery Agent', path: '/signup/provider/delivery', icon: <FaTruck className="text-4xl mb-3" /> },
+  { name: 'Clinic', path: '/signup/provider/doctor', icon: <FaUserMd className="text-4xl mb-3" /> },
+  { name: 'Pharmacy', path: '/signup/provider/pharmacy', icon: <FaHospital className="text-4xl mb-3" /> },
+  { name: 'Diagnostic Center', path: '/signup/provider/diagnostic-center', icon: <FaFlask className="text-4xl mb-3" /> },
+  { name: 'Delivery Agent', path: '/signup/provider/delivery-agent', icon: <FaTruck className="text-4xl mb-3" /> },
+  { name: 'Therapy', path: '/signup/provider/therapy', icon: <FaHandHoldingMedical className="text-4xl mb-3" /> },
+  { name: 'Others', path: '/signup/provider/others', icon: <FaEllipsisH className="text-4xl mb-3" /> },
 ];
 
 const ProviderHub = () => {

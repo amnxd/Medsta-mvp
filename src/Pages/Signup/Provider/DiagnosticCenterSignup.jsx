@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { auth, db } from '@/Services/firebase.js';
+import { auth, db, storage } from '@/Services/firebase.js';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AddressPicker from '/src/Components/common/AddressPicker.jsx';
 import ToggleSwitch from '/src/Components/common/ToggleSwitch.jsx';
 import OtpModal from '/src/Components/common/OtpModal.jsx';
@@ -22,6 +23,17 @@ const DiagnosticCenterSignup = () => {
     reportDelivery: false,
     password: '',
     confirmPassword: '',
+    // new onboarding fields
+    nablCertificateFile: null,
+    labRegistrationFile: null,
+    pathologistCredentialsFiles: [],
+    testMenu: '',
+    sampleReportFile: null,
+    labPhotos: [],
+    panNumber: '',
+    bankAccount: { accountHolder: '', accountNumber: '', ifsc: '' },
+    whatsappNumber: '',
+    consents: { bookingFlow: false, refundTerms: false, dataPrivacy: false },
   });
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +73,31 @@ const DiagnosticCenterSignup = () => {
         updatedAt: serverTimestamp(),
       });
 
+      // upload helper
+      const uploadFiles = async (files, folder) => {
+        if (!files) return [];
+        const arr = Array.isArray(files) ? files : [files];
+        const urls = [];
+        for (let i = 0; i < arr.length; i++) {
+          const f = arr[i];
+          if (!f) continue;
+          const storageRef = ref(storage, `${folder}/${user.uid}/${Date.now()}_${i}_${f.name}`);
+          const snap = await uploadBytes(storageRef, f);
+          const url = await getDownloadURL(snap.ref);
+          urls.push(url);
+        }
+        return urls;
+      };
+
+      const docUploads = {};
+      try {
+        docUploads.nabl = formData.nablCertificateFile ? (await uploadFiles(formData.nablCertificateFile, 'providers_diagnostic_docs'))[0] : null;
+        docUploads.registration = formData.labRegistrationFile ? (await uploadFiles(formData.labRegistrationFile, 'providers_diagnostic_docs'))[0] : null;
+        docUploads.pathologist = formData.pathologistCredentialsFiles && formData.pathologistCredentialsFiles.length ? await uploadFiles(formData.pathologistCredentialsFiles, 'providers_diagnostic_docs') : [];
+        docUploads.sampleReport = formData.sampleReportFile ? (await uploadFiles(formData.sampleReportFile, 'providers_diagnostic_docs'))[0] : null;
+        docUploads.labPhotos = formData.labPhotos && formData.labPhotos.length ? await uploadFiles(formData.labPhotos, 'providers_diagnostic_photos') : [];
+      } catch (uErr) { console.warn('Upload error', uErr); }
+
       // profile doc
       await setDoc(doc(db, 'providers_diagnostic_centers', user.uid), {
         diagnosticCenterName: formData.diagnosticCenterName,
@@ -71,6 +108,18 @@ const DiagnosticCenterSignup = () => {
         diagnosticOpeningHours: formData.diagnosticOpeningHours || null,
         atHomeSampleCollection: !!formData.atHomeSampleCollection,
         reportDelivery: !!formData.reportDelivery,
+        documents: {
+          nabl: docUploads.nabl || null,
+          registration: docUploads.registration || null,
+          pathologistCredentials: docUploads.pathologist || [],
+          sampleReport: docUploads.sampleReport || null,
+          labPhotos: docUploads.labPhotos || [],
+        },
+        testMenu: formData.testMenu || null,
+        panNumber: formData.panNumber || null,
+        bankAccount: formData.bankAccount || null,
+        whatsappNumber: formData.whatsappNumber || null,
+        consents: formData.consents || {},
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       });
@@ -119,7 +168,7 @@ const DiagnosticCenterSignup = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50 py-12">
-      <div className="max-w-md w-full px-6">
+      <div className="max-4-md px-6">
         <div className="bg-white rounded-xl shadow-md p-8">
           <h1 className="text-3xl font-bold text-[#009cfb] mb-1"> {/* UPDATED COLOR HERE */}
             Create a Diagnostic Center Account
@@ -175,6 +224,38 @@ const DiagnosticCenterSignup = () => {
                 placeholder="License Number"
                 className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md"
               />
+            </div>
+
+            {/* Additional verification inputs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">NABL Certificate (if available)</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, nablCertificateFile: e.target.files[0] }))} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Lab Registration Document</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, labRegistrationFile: e.target.files[0] }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Pathologist Credentials (multiple)</label>
+                <input type="file" accept="image/*,.pdf" multiple onChange={(e) => setFormData(p => ({ ...p, pathologistCredentialsFiles: Array.from(e.target.files || []) }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Sample report format</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, sampleReportFile: e.target.files[0] }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Lab photos (multiple)</label>
+                <input type="file" accept="image/*" multiple onChange={(e) => setFormData(p => ({ ...p, labPhotos: Array.from(e.target.files || []) }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Test menu (brief)</label>
+                <input type="text" value={formData.testMenu} onChange={(e) => setFormData(p => ({ ...p, testMenu: e.target.value }))} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md" />
+              </div>
             </div>
 
             <AddressPicker

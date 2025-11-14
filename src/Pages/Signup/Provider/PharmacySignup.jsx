@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { auth, db } from "@/Services/firebase.js";
+import { auth, db, storage } from "@/Services/firebase.js";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AddressPicker from "/src/Components/common/AddressPicker.jsx";
 import OtpModal from "/src/Components/common/OtpModal.jsx";
 import { startPhoneLinking } from "@/Services/phone.service.js";
@@ -19,6 +20,19 @@ const PharmacySignup = () => {
     pharmacyOpeningHours: "",
     password: "",
     confirmPassword: "",
+    // new onboarding fields
+    ownerName: "",
+    gstCertificateFile: null,
+    drugLicenseFiles: [],
+    pharmacistRegistrationFile: null,
+    inventoryFormat: "",
+    deliveryCapability: "",
+    storePhotos: [],
+    sampleInvoiceFile: null,
+    panNumber: "",
+    bankAccount: { accountHolder: "", accountNumber: "", ifsc: "" },
+    whatsappNumber: "",
+    consents: { commissionAgreement: false, deliveryTerms: false, refundPolicy: false },
   });
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -70,7 +84,31 @@ const PharmacySignup = () => {
           updatedAt: serverTimestamp(),
         });
 
-        // Step 3: Create detailed profile
+        // Step 3: Create detailed profile + upload docs
+        const uploadFiles = async (files, folder) => {
+          if (!files) return [];
+          const arr = Array.isArray(files) ? files : [files];
+          const urls = [];
+          for (let i = 0; i < arr.length; i++) {
+            const f = arr[i];
+            if (!f) continue;
+            const storageRef = ref(storage, `${'providers_pharmacies_docs'}/${authUser.uid}/${Date.now()}_${i}_${f.name}`);
+            const snap = await uploadBytes(storageRef, f);
+            const url = await getDownloadURL(snap.ref);
+            urls.push(url);
+          }
+          return urls;
+        };
+
+        const docUploads = {};
+        try {
+          docUploads.gst = formData.gstCertificateFile ? (await uploadFiles(formData.gstCertificateFile, 'providers_pharmacies_docs'))[0] : null;
+          docUploads.drugLicenses = formData.drugLicenseFiles && formData.drugLicenseFiles.length ? await uploadFiles(formData.drugLicenseFiles, 'providers_pharmacies_docs') : [];
+          docUploads.pharmacistRegistration = formData.pharmacistRegistrationFile ? (await uploadFiles(formData.pharmacistRegistrationFile, 'providers_pharmacies_docs'))[0] : null;
+          docUploads.storePhotos = formData.storePhotos && formData.storePhotos.length ? await uploadFiles(formData.storePhotos, 'providers_pharmacies_photos') : [];
+          docUploads.sampleInvoice = formData.sampleInvoiceFile ? (await uploadFiles(formData.sampleInvoiceFile, 'providers_pharmacies_docs'))[0] : null;
+        } catch (uErr) { console.warn('Upload error', uErr); }
+
         await setDoc(doc(db, "providers_pharmacies", authUser.uid), {
           pharmacyName: formData.pharmacyName,
           pharmacyLicenseNumber: formData.pharmacyLicenseNumber || null,
@@ -78,6 +116,20 @@ const PharmacySignup = () => {
           pharmacyLat: formData.pharmacyLat || null,
           pharmacyLng: formData.pharmacyLng || null,
           pharmacyOpeningHours: formData.pharmacyOpeningHours || null,
+          ownerName: formData.ownerName || null,
+          documents: {
+            gst: docUploads.gst || null,
+            drugLicenses: docUploads.drugLicenses || [],
+            pharmacistRegistration: docUploads.pharmacistRegistration || null,
+            storePhotos: docUploads.storePhotos || [],
+            sampleInvoice: docUploads.sampleInvoice || null,
+          },
+          inventoryFormat: formData.inventoryFormat || null,
+          deliveryCapability: formData.deliveryCapability || null,
+          panNumber: formData.panNumber || null,
+          bankAccount: formData.bankAccount || null,
+          whatsappNumber: formData.whatsappNumber || null,
+          consents: formData.consents || {},
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
         });
@@ -221,6 +273,53 @@ const PharmacySignup = () => {
                 placeholder="License Number"
                 className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md"
               />
+            </div>
+
+            {/* Additional verification and operational inputs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2">Owner's Name</label>
+                <input type="text" value={formData.ownerName} onChange={(e) => setFormData(p => ({ ...p, ownerName: e.target.value }))} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">GST Certificate (optional)</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, gstCertificateFile: e.target.files[0] }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Drug License (Form 20/21) (multiple)</label>
+                <input type="file" accept="image/*,.pdf" multiple onChange={(e) => setFormData(p => ({ ...p, drugLicenseFiles: Array.from(e.target.files || []) }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Pharmacist Registration (if applicable)</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, pharmacistRegistrationFile: e.target.files[0] }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Inventory Format</label>
+                <select value={formData.inventoryFormat} onChange={(e) => setFormData(p => ({ ...p, inventoryFormat: e.target.value }))} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md">
+                  <option value="">Select</option>
+                  <option value="excel">Excel</option>
+                  <option value="api">API</option>
+                  <option value="whatsapp">WhatsApp</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Delivery capability</label>
+                <input type="text" placeholder="e.g. own rider / medsta rider" value={formData.deliveryCapability} onChange={(e) => setFormData(p => ({ ...p, deliveryCapability: e.target.value }))} className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-md" />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Store photos (multiple)</label>
+                <input type="file" accept="image/*" multiple onChange={(e) => setFormData(p => ({ ...p, storePhotos: Array.from(e.target.files || []) }))} />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Sample invoice / bill (optional)</label>
+                <input type="file" accept="image/*,.pdf" onChange={(e) => setFormData(p => ({ ...p, sampleInvoiceFile: e.target.files[0] }))} />
+              </div>
             </div>
 
             <AddressPicker

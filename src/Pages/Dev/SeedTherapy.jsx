@@ -1,0 +1,83 @@
+import React, { useState } from 'react';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@/Services/firebase.js';
+import { useAuthStore } from '@/Stores/authStore.js';
+
+const SeedTherapy = () => {
+  const user = useAuthStore((s) => s.user);
+  const [saving, setSaving] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [data, setData] = useState({
+    therapistFullName: 'Riya Verma',
+    therapyType: 'Physiotherapy',
+    centerName: 'HealWell Therapy Center',
+    address: '',
+    lat: null,
+    lng: null,
+    email: '',
+    phone: '',
+    yearsExperience: 5,
+    sessionFee: 800,
+    modes: { atCenter: true, atHome: true, online: true },
+    status: 'active',
+  });
+
+  const canWrite = !!user?.uid;
+
+  const onSave = async () => {
+    if (!canWrite) { setMsg('Login as a provider to seed therapy doc.'); return; }
+    setSaving(true); setMsg('');
+    try {
+      await setDoc(
+        doc(db, 'providers_therapies', user.uid),
+        {
+          therapistFullName: data.therapistFullName,
+          therapyType: data.therapyType,
+          centerName: data.centerName || null,
+          address: data.address || null,
+          lat: data.lat ?? null,
+          lng: data.lng ?? null,
+          email: data.email || null,
+          phone: data.phone || null,
+          yearsExperience: Number(data.yearsExperience || 0),
+          sessionFee: Number(data.sessionFee || 0),
+          modes: data.modes || {},
+          status: data.status || 'pending',
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+      setMsg('Therapy profile saved to providers_therapies.');
+    } catch (e) {
+      console.error(e); setMsg(e.message || 'Failed to save');
+    } finally { setSaving(false); }
+  };
+
+  return (
+    <main className="min-h-screen pt-20 px-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow p-6">
+        <h1 className="text-2xl font-bold">Dev: Seed Therapy Provider</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          <input className="px-3 py-2 border rounded" placeholder="Therapist full name" value={data.therapistFullName} onChange={(e)=>setData(d=>({...d,therapistFullName:e.target.value}))} />
+          <input className="px-3 py-2 border rounded" placeholder="Therapy type" value={data.therapyType} onChange={(e)=>setData(d=>({...d,therapyType:e.target.value}))} />
+          <input className="px-3 py-2 border rounded sm:col-span-2" placeholder="Center name (optional)" value={data.centerName} onChange={(e)=>setData(d=>({...d,centerName:e.target.value}))} />
+          <input className="px-3 py-2 border rounded sm:col-span-2" placeholder="Address" value={data.address} onChange={(e)=>setData(d=>({...d,address:e.target.value}))} />
+          <input type="number" className="px-3 py-2 border rounded" placeholder="Lat" value={data.lat ?? ''} onChange={(e)=>setData(d=>({...d,lat:e.target.value?Number(e.target.value):null}))} />
+          <input type="number" className="px-3 py-2 border rounded" placeholder="Lng" value={data.lng ?? ''} onChange={(e)=>setData(d=>({...d,lng:e.target.value?Number(e.target.value):null}))} />
+          <input className="px-3 py-2 border rounded" placeholder="Email" value={data.email} onChange={(e)=>setData(d=>({...d,email:e.target.value}))} />
+          <input className="px-3 py-2 border rounded" placeholder="Phone" value={data.phone} onChange={(e)=>setData(d=>({...d,phone:e.target.value}))} />
+          <input type="number" className="px-3 py-2 border rounded" placeholder="Years experience" value={data.yearsExperience} onChange={(e)=>setData(d=>({...d,yearsExperience:Number(e.target.value||0)}))} />
+          <input type="number" className="px-3 py-2 border rounded" placeholder="Session fee" value={data.sessionFee} onChange={(e)=>setData(d=>({...d,sessionFee:Number(e.target.value||0)}))} />
+        </div>
+        <div className="mt-6 flex items-center gap-3">
+          <button disabled={!canWrite||saving} onClick={onSave} className={`px-4 py-2 rounded text-white ${saving?'bg-gray-400':'bg-green-600 hover:bg-green-700'}`}>{saving?'Saving…':'Save therapy profile'}</button>
+          <span className="text-sm text-gray-600">Doc path: providers_therapies/{user?.uid || 'YOUR_UID'}</span>
+        </div>
+        {msg && <p className="mt-3 text-sm">{msg}</p>}
+      </div>
+    </main>
+  );
+};
+
+export default SeedTherapy;
